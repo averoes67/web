@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Dunia Warna Kids - Aplikasi mewarnai untuk anak-anak">
+    <title>Dunia Warna Kids - Upload Sendiri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* === ROOT VARIABLES === */
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-lighter: #a5d6a7;
+            --primary-bg: #e8f5e9;
+            --secondary: #ff9800;
+            --secondary-dark: #ef6c00;
+            --accent-blue: #2196f3;
+            --accent-blue-light: #e3f2fd;
+            --accent-blue-hover: #bbdefb;
+            --white: #ffffff;
+            --gray: #e0e0e0;
+            --text-dark: #333333;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 15px;
+            --radius-lg: 20px;
+            --radius-full: 50px;
+            --transition: all 0.3s ease;
+        }
+
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #c8e6c9 50%, #b2dfdb 100%);
+            min-height: 100vh;
+            padding: 15px;
+            text-align: center;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* === HEADER === */
+        .header {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-shadow: 3px 3px 0px var(--primary-lighter);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: clamp(0.875rem, 2.5vw, 1.1rem);
+            font-weight: 600;
+        }
+
+        /* === MAIN CONTAINER === */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        /* === GALLERY CONTAINER === */
+        .gallery-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 4px solid var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .gallery-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .product-card {
+            border: 3px solid var(--gray);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .product-card:hover,
+        .product-card:active {
+            background-color: var(--primary-bg);
+            border-color: var(--primary-light);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .product-card .card-title {
+            font-size: clamp(0.7rem, 2.5vw, 0.875rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* === UPLOAD BOX === */
+        .upload-box {
+            background: linear-gradient(135deg, var(--accent-blue-light) 0%, #e1f5fe 100%);
+            border: 3px dashed var(--accent-blue);
+            padding: 20px 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-box.drag-over {
+            background: var(--accent-blue-hover);
+            border-color: #1976d2;
+            transform: scale(1.02);
+        }
+
+        .upload-box:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .upload-title {
+            font-weight: 700;
+            color: #1565c0;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            margin-bottom: 10px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #1976d2 100%);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            transition: var(--transition);
+            box-shadow: 0 4px #1565c0;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px #1565c0;
+        }
+
+        .upload-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px #1565c0;
+        }
+
+        .upload-hint {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* === UPLOADED IMAGES SECTION === */
+        .uploaded-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--gray);
+            display: none;
+        }
+
+        .uploaded-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            margin-bottom: 10px;
+        }
+
+        .uploaded-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .uploaded-card {
+            position: relative;
+            border: 2px solid var(--accent-blue);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .uploaded-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .uploaded-card img {
+            width: 100%;
+            height: 60px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .uploaded-card .delete-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .uploaded-card:hover .delete-btn {
+            opacity: 1;
+        }
+
+        /* === WORKSPACE === */
+        .workspace {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 4px solid var(--primary-light);
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            border: 4px dashed var(--primary-lighter);
+            margin-bottom: 15px;
+            cursor: crosshair;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            touch-action: none;
+            max-width: 100%;
+        }
+
+        canvas {
+            display: block;
+            background: var(--white);
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* === TOOLBAR === */
+        .tools {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+            padding: 12px 15px;
+            border-radius: var(--radius-full);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 15px;
+            border: 3px solid var(--primary-lighter);
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tool-option {
+            display: none;
+        }
+
+        .tool-label {
+            padding: 8px 14px;
+            background: var(--white);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            border: 2px solid var(--gray);
+            font-size: clamp(0.7rem, 2.5vw, 0.875rem);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tool-label:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .tool-option:checked+.tool-label {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: var(--white);
+            border-color: var(--primary);
+            font-weight: 700;
+            box-shadow: 0 3px var(--primary);
+        }
+
+        input[type="color"] {
+            border: 3px solid var(--gray);
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: none;
+            border-radius: 50%;
+            padding: 2px;
+            transition: var(--transition);
+        }
+
+        input[type="color"]:hover {
+            border-color: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .brush-size-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .brush-size-wrapper label {
+            font-size: clamp(0.65rem, 2vw, 0.75rem);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            width: 70px;
+            cursor: pointer;
+            accent-color: var(--primary-light);
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            border: 2px solid;
+            font-size: clamp(0.7rem, 2.5vw, 0.875rem);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .action-btn.undo-redo {
+            background: #e1f5fe;
+            border-color: #b3e5fc;
+            color: #0277bd;
+        }
+
+        .action-btn.reset {
+            background: #ffcdd2;
+            border-color: #ef9a9a;
+            color: #c62828;
+        }
+
+        .action-btn.save {
+            background: #c8e6c9;
+            border-color: #81c784;
+            color: var(--primary);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        /* === PRODUCT TITLE === */
+        .current-product {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding: 8px 20px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+
+        /* === BUY BUTTON === */
+        .btn-buy {
+            background: linear-gradient(135deg, var(--secondary) 0%, #f57c00 100%);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: var(--radius-full);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px var(--secondary-dark);
+            transition: var(--transition);
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px var(--secondary-dark);
+        }
+
+        .btn-buy:active {
+            transform: translateY(0);
+            box-shadow: 0 2px var(--secondary-dark);
+        }
+
+        /* === MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+            position: relative;
+            border: 4px solid var(--secondary);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: #f44336;
+        }
+
+        .modal-title {
+            color: var(--secondary-dark);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+        }
+
+        .payment-info {
+            background: #fff3e0;
+            padding: 12px 15px;
+            border-radius: var(--radius-sm);
+            margin: 12px 0;
+            border: 2px solid #ffe0b2;
+        }
+
+        .payment-info strong {
+            color: var(--secondary-dark);
+        }
+
+        .btn-wa {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: var(--white);
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: clamp(0.95rem, 3vw, 1.1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: var(--transition);
+            box-shadow: 0 4px #128C7E;
+        }
+
+        .btn-wa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px #128C7E;
+        }
+
+        /* === TOAST NOTIFICATION === */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* === RESPONSIVE CSS === */
+
+        /* Tablets Portrait */
+        @media (min-width: 601px) {
+            .container {
+                grid-template-columns: 1fr 1.5fr;
+            }
+
+            .gallery-container {
+                max-height: 70vh;
+            }
+        }
+
+        /* Tablets Landscape & Desktop */
+        @media (min-width: 901px) {
+            .container {
+                grid-template-columns: 320px 1fr;
+                gap: 30px;
+            }
+
+            .gallery-container {
+                max-height: 80vh;
+            }
+        }
+
+        /* Large Desktop */
+        @media (min-width: 1201px) {
+            body {
+                padding: 30px;
+            }
+
+            .container {
+                grid-template-columns: 350px 1fr;
+            }
+
+            canvas {
+                width: 500px !important;
+                height: 500px !important;
+            }
+        }
+
+        /* Mobile Landscape */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .container {
+                grid-template-columns: 1fr 1.5fr;
+            }
+
+            .gallery-container {
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>🎨 Dunia Warna Kids</h1>
+        <p class="subtitle">Upload gambarmu sendiri atau pilih dari koleksi kami!</p>
+    </header>
+
+    <div class="container">
+        <!-- Gallery Section -->
+        <div class="gallery-container">
+            <!-- Upload Box -->
+            <div class="upload-box" id="uploadBox">
+                <span class="upload-icon">📂</span>
+                <div class="upload-title">Punya Gambar Sendiri?</div>
+                <button class="upload-btn"
+                    onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
+                    📷 Upload Foto / Gambar
+                </button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                <p class="upload-hint">Drag & drop gambar atau klik untuk upload<br>(Gunakan gambar garis hitam putih)
+                </p>
+            </div>
+
+            <!-- Uploaded Images Section -->
+            <div class="uploaded-section" id="uploadedSection">
+                <div class="uploaded-title">📁 Gambar Uploadmu:</div>
+                <div class="uploaded-gallery" id="uploadedGallery"></div>
+            </div>
+
+            <!-- Collection Gallery -->
+            <div class="gallery-header">📚 Koleksi Gambar</div>
+            <div class="gallery">
+                <div class="product-card" onclick="loadImage(this, 'Kupu-kupu')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M100,60 C80,20 20,40 20,90 C20,130 80,130 100,100 C120,130 180,130 180,90 C180,40 120,20 100,60 Z" stroke="black" stroke-width="3" fill="none"/><path d="M100,100 C80,130 40,130 40,160 C40,190 90,190 100,150 C110,190 160,190 160,160 C160,130 120,130 100,100 Z" stroke="black" stroke-width="3" fill="none"/><ellipse cx="100" cy="100" rx="5" ry="60" fill="white" stroke="black" stroke-width="3"/><circle cx="100" cy="40" r="10" stroke="black" stroke-width="3" fill="white"/><path d="M90,30 L80,10 M110,30 L120,10" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Kupu-kupu</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Mobil')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M40,100 L40,140 L160,140 L160,100 L130,100 L110,60 L70,60 L50,100 Z" stroke="black" stroke-width="4" fill="none"/><circle cx="60" cy="140" r="15" stroke="black" stroke-width="4" fill="white"/><circle cx="140" cy="140" r="15" stroke="black" stroke-width="4" fill="white"/><rect x="75" y="70" width="30" height="25" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Mobil</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Es Krim')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M70,80 L100,180 L130,80 Z" stroke="black" stroke-width="4" fill="none"/><path d="M60,80 C60,40 140,40 140,80 Z" stroke="black" stroke-width="4" fill="none"/><circle cx="85" cy="50" r="20" stroke="black" stroke-width="3" fill="none"/><circle cx="115" cy="50" r="20" stroke="black" stroke-width="3" fill="none"/><path d="M70,80 L130,80" stroke="black" stroke-width="4"/></svg>'>
+                    <div class="card-title">Es Krim</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Rumah')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M40,100 L100,40 L160,100 M50,100 L50,180 L150,180 L150,100 M90,180 L90,130 L110,130 L110,180" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Rumah</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Bunga')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><circle cx="100" cy="80" r="25" stroke="black" stroke-width="3" fill="none"/><circle cx="70" cy="60" r="20" stroke="black" stroke-width="3" fill="none"/><circle cx="130" cy="60" r="20" stroke="black" stroke-width="3" fill="none"/><circle cx="60" cy="90" r="20" stroke="black" stroke-width="3" fill="none"/><circle cx="140" cy="90" r="20" stroke="black" stroke-width="3" fill="none"/><path d="M100,105 L100,180" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Bunga</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Bintang')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M100,20 L115,70 L170,70 L125,105 L140,160 L100,130 L60,160 L75,105 L30,70 L85,70 Z" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Bintang</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Ikan')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><ellipse cx="100" cy="100" rx="60" ry="40" stroke="black" stroke-width="3" fill="none"/><path d="M160,100 L190,70 L190,130 Z" stroke="black" stroke-width="3" fill="none"/><circle cx="60" cy="90" r="8" stroke="black" stroke-width="2" fill="none"/><path d="M100,60 Q120,50 100,40" stroke="black" stroke-width="3" fill="none"/><path d="M100,140 Q120,150 100,160" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Ikan</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Kucing')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><circle cx="100" cy="100" r="50" stroke="black" stroke-width="3" fill="none"/><path d="M50,60 L60,30 L80,60" stroke="black" stroke-width="3" fill="none"/><path d="M150,60 L140,30 L120,60" stroke="black" stroke-width="3" fill="none"/><circle cx="80" cy="90" r="8" stroke="black" stroke-width="2" fill="none"/><circle cx="120" cy="90" r="8" stroke="black" stroke-width="2" fill="none"/><ellipse cx="100" cy="110" rx="8" ry="5" stroke="black" stroke-width="2" fill="none"/><path d="M100,115 L100,125 M100,125 Q90,135 80,125 M100,125 Q110,135 120,125" stroke="black" stroke-width="2" fill="none"/><path d="M60,105 L30,100 M60,110 L30,115 M60,115 L30,130" stroke="black" stroke-width="2"/><path d="M140,105 L170,100 M140,110 L170,115 M140,115 L170,130" stroke="black" stroke-width="2"/></svg>'>
+                    <div class="card-title">Kucing</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Matahari')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><circle cx="100" cy="100" r="40" stroke="black" stroke-width="3" fill="none"/><line x1="100" y1="20" x2="100" y2="50" stroke="black" stroke-width="3"/><line x1="100" y1="150" x2="100" y2="180" stroke="black" stroke-width="3"/><line x1="20" y1="100" x2="50" y2="100" stroke="black" stroke-width="3"/><line x1="150" y1="100" x2="180" y2="100" stroke="black" stroke-width="3"/><line x1="45" y1="45" x2="65" y2="65" stroke="black" stroke-width="3"/><line x1="135" y1="135" x2="155" y2="155" stroke="black" stroke-width="3"/><line x1="155" y1="45" x2="135" y2="65" stroke="black" stroke-width="3"/><line x1="45" y1="155" x2="65" y2="135" stroke="black" stroke-width="3"/></svg>'>
+                    <div class="card-title">Matahari</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Balon')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><ellipse cx="70" cy="70" rx="30" ry="40" stroke="black" stroke-width="3" fill="none"/><path d="M70,110 L70,120 L65,125" stroke="black" stroke-width="2" fill="none"/><path d="M65,125 Q80,140 75,180" stroke="black" stroke-width="2" fill="none"/><ellipse cx="130" cy="80" rx="25" ry="35" stroke="black" stroke-width="3" fill="none"/><path d="M130,115 L130,125 L125,130" stroke="black" stroke-width="2" fill="none"/><path d="M125,130 Q140,145 135,180" stroke="black" stroke-width="2" fill="none"/></svg>'>
+                    <div class="card-title">Balon</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Hati')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M100,160 C60,120 20,80 20,60 C20,30 50,20 70,20 C85,20 100,35 100,50 C100,35 115,20 130,20 C150,20 180,30 180,60 C180,80 140,120 100,160 Z" stroke="black" stroke-width="3" fill="none"/></svg>'>
+                    <div class="card-title">Hati</div>
+                </div>
+                <div class="product-card" onclick="loadImage(this, 'Pelangi')">
+                    <img
+                        src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="white"/><path d="M20,150 Q20,50 100,50 Q180,50 180,150" stroke="black" stroke-width="3" fill="none"/><path d="M35,150 Q35,70 100,70 Q165,70 165,150" stroke="black" stroke-width="3" fill="none"/><path d="M50,150 Q50,90 100,90 Q150,90 150,150" stroke="black" stroke-width="3" fill="none"/><path d="M65,150 Q65,110 100,110 Q135,110 135,150" stroke="black" stroke-width="3" fill="none"/><ellipse cx="40" cy="160" rx="25" ry="15" stroke="black" stroke-width="2" fill="none"/><ellipse cx="160" cy="160" rx="25" ry="15" stroke="black" stroke-width="2" fill="none"/></svg>'>
+                    <div class="card-title">Pelangi</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workspace Section -->
+        <div class="workspace">
+            <!-- Toolbar -->
+            <div class="tools">
+                <input type="color" id="colorPicker" value="#ff0000" title="Pilih Warna">
+
+                <div class="brush-size-wrapper">
+                    <label for="brushSize">Ukuran Kuas</label>
+                    <input type="range" id="brushSize" min="1" max="50" value="10">
+                </div>
+
+                <input type="radio" name="tool" id="toolBucket" class="tool-option" value="bucket" checked>
+                <label for="toolBucket" class="tool-label">🪣 Isi</label>
+
+                <input type="radio" name="tool" id="toolBrush" class="tool-option" value="brush">
+                <label for="toolBrush" class="tool-label">🖌️ Kuas</label>
+
+                <input type="radio" name="tool" id="toolEraser" class="tool-option" value="eraser">
+                <label for="toolEraser" class="tool-label">🧽 Hapus</label>
+
+                <button class="action-btn undo-redo" onclick="undo()">↶ Undo</button>
+                <button class="action-btn undo-redo" onclick="redo()">↷ Redo</button>
+                <button class="action-btn reset" onclick="clearCanvas()">🔄 Reset</button>
+                <button class="action-btn save" onclick="saveImage()">💾 Simpan</button>
+            </div>
+
+            <!-- Canvas -->
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <canvas id="canvas" width="400" height="400"></canvas>
+            </div>
+
+            <div class="current-product" id="currentProductTitle">Silakan Pilih Gambar</div>
+            <button class="btn-buy" onclick="openPaymentModal()">🛒 Beli Karya Ini</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title">💳 Pembayaran</h2>
+            <p>Order: <strong id="modalProductName">-</strong></p>
+            <div class="payment-info">
+                <strong>Bank BCA</strong><br> No. Rek: 123-456-7890 (Budi)
+            </div>
+            <div class="payment-info">
+                <strong>DANA</strong><br> 0812-3456-7890 (Budi)
+            </div>
+            <a href="#" id="waLink" target="_blank" class="btn-wa">📱 Konfirmasi via WhatsApp</a>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // === KONFIGURASI ===
+        const whatsappNumber = "6281234567890"; // GANTI NO WA DISINI
+        const adminName = "Admin";
+
+        // === VARIABEL GLOBAL ===
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const colorPicker = document.getElementById('colorPicker');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBox = document.getElementById('uploadBox');
+        const uploadedSection = document.getElementById('uploadedSection');
+        const uploadedGallery = document.getElementById('uploadedGallery');
+
+        let currentTool = 'bucket';
+        let isDrawing = false;
+        let originalImg = null;
+        let currentProductName = "Belum Pilih";
+        let undoStack = [];
+        let redoStack = [];
+        const maxUndoSteps = 20;
+        let uploadedImages = [];
+
+        // === SETUP AWAL ===
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = document.getElementById('brushSize').value;
+
+        // === RESPONSIVE CANVAS ===
+        function resizeCanvas() {
+            const wrapper = document.getElementById('canvasWrapper');
+            const maxWidth = Math.min(wrapper.parentElement.clientWidth - 50, 500);
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = maxWidth + 'px';
+        }
+
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        // === TOAST NOTIFICATION ===
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // === DRAG & DROP UPLOAD ===
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadBox.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadBox.addEventListener(eventName, () => uploadBox.classList.add('drag-over'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadBox.addEventListener(eventName, () => uploadBox.classList.remove('drag-over'), false);
+        });
+
+        uploadBox.addEventListener('drop', function (e) {
+            handleFiles(e.dataTransfer.files);
+        }, false);
+
+        uploadBox.addEventListener('click', () => fileInput.click());
+
+        // === FILE UPLOAD HANDLER ===
+        fileInput.addEventListener('change', function (e) {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    showToast('⚠️ Hanya file gambar yang diperbolehkan!');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const imgData = event.target.result;
+                    addToUploadedGallery(imgData, file.name);
+                    loadUploadedImage(imgData, file.name);
+                    showToast('✅ Gambar berhasil diupload!');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function addToUploadedGallery(imgData, fileName) {
+            const id = Date.now();
+            uploadedImages.push({ id, imgData, fileName });
+
+            uploadedSection.style.display = 'block';
+
+            const card = document.createElement('div');
+            card.className = 'uploaded-card';
+            card.dataset.id = id;
+            card.innerHTML = '<img src="' + imgData + '" alt="' + fileName + '"><button class="delete-btn" onclick="deleteUploadedImage(' + id + ', event)">✕</button>';
+            card.onclick = function () { loadUploadedImage(imgData, fileName); };
+
+            uploadedGallery.appendChild(card);
+        }
+
+        function deleteUploadedImage(id, event) {
+            event.stopPropagation();
+            uploadedImages = uploadedImages.filter(img => img.id !== id);
+
+            const card = uploadedGallery.querySelector('[data-id="' + id + '"]');
+            if (card) card.remove();
+
+            if (uploadedImages.length === 0) {
+                uploadedSection.style.display = 'none';
+            }
+
+            showToast('🗑️ Gambar dihapus');
+        }
+
+        function loadUploadedImage(imgData, fileName) {
+            const img = new Image();
+            img.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                originalImg = img;
+                currentProductName = fileName || "Gambar Upload Sendiri";
+                document.getElementById('currentProductTitle').innerText = "Mewarnai: " + currentProductName;
+                saveState();
+            };
+            img.src = imgData;
+        }
+
+        // === TOOL SELECTION ===
+        document.querySelectorAll('input[name="tool"]').forEach(input => {
+            input.addEventListener('change', (e) => currentTool = e.target.value);
+        });
+
+        // === LOAD IMAGE FROM GALLERY ===
+        function loadImage(card, name) {
+            const imgEl = card.querySelector('img');
+            currentProductName = name;
+            document.getElementById('currentProductTitle').innerText = "Mewarnai: " + name;
+
+            const img = new Image();
+            img.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                originalImg = img;
+                saveState();
+            };
+            img.src = imgEl.src;
+        }
+
+        // === PAYMENT MODAL ===
+        function openPaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            document.getElementById('modalProductName').innerText = currentProductName;
+            const message = 'Halo ' + adminName + ', saya mau beli gambar "' + currentProductName + '". Mohon diproses.';
+            document.getElementById('waLink').href = 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent(message);
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('paymentModal')) closeModal();
+        };
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // === CANVAS DRAWING ===
+        function clearCanvas() {
+            if (originalImg) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+                showToast('🔄 Canvas direset');
+            } else {
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', endDraw);
+        canvas.addEventListener('mouseleave', endDraw);
+
+        // Touch Events
+        canvas.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            startDraw(e.touches[0]);
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+            draw(e.touches[0]);
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            endDraw();
+        }, { passive: false });
+
+        function endDraw() {
+            if (isDrawing) saveState();
+            isDrawing = false;
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            return {
+                x: Math.floor((e.clientX - rect.left) * scaleX),
+                y: Math.floor((e.clientY - rect.top) * scaleY)
+            };
+        }
+
+        function startDraw(e) {
+            const pos = getPos(e);
+
+            if (currentTool === 'brush') {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                ctx.strokeStyle = colorPicker.value;
+                ctx.lineWidth = document.getElementById('brushSize').value;
+            } else if (currentTool === 'eraser') {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = document.getElementById('brushSize').value;
+            } else if (currentTool === 'bucket') {
+                fillArea(pos.x, pos.y, hexToRgb(colorPicker.value));
+                saveState();
+            }
+        }
+
+        function draw(e) {
+            if (!isDrawing || (currentTool !== 'brush' && currentTool !== 'eraser')) return;
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        // === FLOOD FILL (BUCKET) ===
+        function fillArea(startX, startY, fillColor) {
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            const width = canvas.width;
+            const height = canvas.height;
+            const startPos = (startY * width + startX) * 4;
+            const startR = data[startPos], startG = data[startPos + 1], startB = data[startPos + 2];
+
+            if ((startR === fillColor.r && startG === fillColor.g && startB === fillColor.b) ||
+                (startR < 100 && startG < 100 && startB < 100)) return;
+
+            const stack = [[startX, startY]];
+            const visited = new Set();
+
+            while (stack.length) {
+                const coords = stack.pop();
+                const x = coords[0];
+                const y = coords[1];
+                const key = x + ',' + y;
+
+                if (visited.has(key)) continue;
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+                const pos = (y * width + x) * 4;
+                if (!matchColor(data, pos, startR, startG, startB)) continue;
+
+                visited.add(key);
+                data[pos] = fillColor.r;
+                data[pos + 1] = fillColor.g;
+                data[pos + 2] = fillColor.b;
+                data[pos + 3] = 255;
+
+                stack.push([x + 1, y]);
+                stack.push([x - 1, y]);
+                stack.push([x, y + 1]);
+                stack.push([x, y - 1]);
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+        }
+
+        function matchColor(data, pos, r, g, b) {
+            return Math.abs(data[pos] - r) < 50 &&
+                Math.abs(data[pos + 1] - g) < 50 &&
+                Math.abs(data[pos + 2] - b) < 50;
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // === UNDO/REDO ===
+        function saveState() {
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            if (undoStack.length > maxUndoSteps) undoStack.shift();
+            redoStack = [];
+        }
+
+        function undo() {
+            if (undoStack.length > 0) {
+                redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                const imgData = undoStack.pop();
+                ctx.putImageData(imgData, 0, 0);
+                showToast('↶ Undo');
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                const imgData = redoStack.pop();
+                ctx.putImageData(imgData, 0, 0);
+                showToast('↷ Redo');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
+                undo();
+            }
+            if (e.ctrlKey && e.key === 'y') {
+                e.preventDefault();
+                redo();
+            }
+        });
+
+        // === SAVE IMAGE ===
+        function saveImage() {
+            const link = document.createElement('a');
+            link.download = 'karya-' + currentProductName.replace(/\s+/g, '-').toLowerCase() + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('💾 Gambar tersimpan!');
+        }
+
+        // === INITIALIZE ===
+        saveState();
+    </script>
+</body>
+
+</html>
